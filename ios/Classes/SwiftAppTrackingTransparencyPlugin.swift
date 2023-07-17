@@ -41,13 +41,16 @@ public class SwiftAppTrackingTransparencyPlugin: NSObject, FlutterPlugin {
     case authorized = 3
   */
   private func requestTrackingAuthorization(result: @escaping FlutterResult) {
-    if #available(iOS 14, *) {
-        ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-            result(Int(status.rawValue))
-        })
-    } else {
-        // return notSupported
-        result(Int(4))
+    // IMPORTANT: wait for 1 second to display another alert
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      if #available(iOS 14, *) {
+          ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+              result(Int(status.rawValue))
+          })
+      } else {
+          // return notSupported
+          result(Int(4))
+      }
     }
   }
 
